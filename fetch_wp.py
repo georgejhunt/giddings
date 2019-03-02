@@ -81,12 +81,18 @@ if args.check:
 f = []
 for (dirpath, dirnames, filenames) in os.walk(dirn):
     f.extend(filenames)
+download_cnt = present_cnt = 0
 for child in root.findall(".//item",ns):
    url = child.find("wp:attachment_url",ns)
    if not url is None and len(url) == 0:
       if os.path.basename(url.text) not in f:
+         download_cnt +=1
          print("Downloading %s"%os.path.basename(url.text))
          dlfile(url.text)
+      else:
+         present_cnt += 1
+print("\nNunber of items downloaded: %s \nTotal count: %s"%(
+         download_cnt,download_cnt+present_cnt,))
 
 # all done, restore original directory
 os.chdir(orig_cwd)
